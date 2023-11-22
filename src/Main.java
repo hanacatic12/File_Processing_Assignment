@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         File file = new File("src/Google Play Store Apps.csv");
 
-        //ArrayList<App> apps = new ArrayList<>();
 
         Map<String, Integer> appsPerCategory = new HashMap<>();
         Map<String, Long> numberOfFreeApps = new HashMap<>();
@@ -25,7 +23,6 @@ public class Main {
             try {
                 while (s.hasNextLine()) {
                     String line = s.nextLine();
-                    //String[] lineParts = line.split(",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)");
 
                     findNumberOfAppsPerCategory(line, appsPerCategory);
                     findNumberOfFreeApps(line, numberOfFreeApps);
@@ -168,9 +165,7 @@ public class Main {
 
 
         try {
-            //FileWriter writer = new FileWriter("src/HowManyAppsAccordingToBudget.csv");
             writer.write(budget + "$, " + quantity + "\n" );
-            // writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
