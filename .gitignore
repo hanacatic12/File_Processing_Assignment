@@ -29,7 +29,6 @@ bin/
 .DS_Store
 
 Google Play Store Apps.csv
-Apps_Shorter.csv
 HowManyAppsAccordingToBudget.csv
 NumberOfAppsPerCategory.csv
 NumberOfAppsPerCompany.csv
