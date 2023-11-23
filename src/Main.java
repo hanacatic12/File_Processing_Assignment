@@ -3,8 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
@@ -23,12 +21,13 @@ public class Main {
             try {
                 while (s.hasNextLine()) {
                     String line = s.nextLine();
+                    String[] lineParts = line.split(",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)");
 
-                    findNumberOfAppsPerCategory(line, appsPerCategory);
-                    findNumberOfFreeApps(line, numberOfFreeApps);
-                    findNumberOfAppsPerCompany(line, appsPerCompany);
-                    findDevelopers(line, appsPerDeveloper);
-                    findPrices(line, prices);
+                    findNumberOfAppsPerCategory(lineParts, appsPerCategory);
+                    findNumberOfFreeApps(lineParts, numberOfFreeApps);
+                    findNumberOfAppsPerCompany(lineParts, appsPerCompany);
+                    findDevelopers(lineParts, appsPerDeveloper);
+                    findPrices(lineParts, prices);
 
                 }
             } catch (Error e) {
@@ -63,37 +62,14 @@ public class Main {
 
     }
 
-    private static String[] customSplit(String line) {
 
-        Pattern pattern = Pattern.compile("(?<=,|^)(\"(?:[^\"]|\"\")*\"|[^,]*)(?:,|$)");
-        Matcher matcher = pattern.matcher(line);
-
-        List<String> values = new ArrayList<>();
-
-        while (matcher.find()) {
-
-            String value = matcher.group(1).replaceAll("\"\"", "\"").trim();
-
-            // Handle consecutive commas
-            if (value.isEmpty() && matcher.group(0).equals(",")) {
-                values.add("");  // Add an empty field
-            } else {
-                values.add(value);
-            }
-        }
-
-        return values.toArray(new String[0]);
-    }
-
-    public static void findNumberOfAppsPerCategory(String line, Map<String, Integer> appsPerCategory) {
-        String[] lineParts = customSplit(line);
+    public static void findNumberOfAppsPerCategory(String[] lineParts, Map<String, Integer> appsPerCategory) {
         String category = lineParts[2].strip();
 
         appsPerCategory.put(category, appsPerCategory.getOrDefault(category, 0) + 1);
     }
 
-    public static void findNumberOfFreeApps(String line, Map<String, Long> numberOfFreeApps) {
-        String[] lineParts = customSplit(line);
+    public static void findNumberOfFreeApps(String[] lineParts, Map<String, Long> numberOfFreeApps) {
         String installs = lineParts[5].strip();
 
 
@@ -119,8 +95,7 @@ public class Main {
     }
 
 
-    public static void findNumberOfAppsPerCompany(String line, Map<String, Integer> appsPerCompany) {
-        String[] lineParts = customSplit(line);
+    public static void findNumberOfAppsPerCompany(String[] lineParts, Map<String, Integer> appsPerCompany) {
         String company = lineParts[1].strip();
 
         String[] id = company.split("\\.");           //razdvoji po tackama
@@ -131,8 +106,7 @@ public class Main {
         appsPerCompany.put(company, appsPerCompany.getOrDefault(company, 0) + 1);
     }
 
-    public static void findDevelopers(String line, Map<String, Integer> appsPerDeveloper) {
-        String[] lineParts = customSplit(line);
+    public static void findDevelopers(String[] lineParts, Map<String, Integer> appsPerDeveloper) {
         String company = lineParts[1].strip();
         String[] id = company.split("\\.");
         if(id.length >= 2)
@@ -144,8 +118,7 @@ public class Main {
             appsPerDeveloper.put(developerid, appsPerDeveloper.getOrDefault(developerid, 0) + 1);
     }
 
-    public static void findPrices(String line, ArrayList<Double> prices) {
-        String[] lineParts = customSplit(line);
+    public static void findPrices(String[] lineParts, ArrayList<Double> prices) {
         String pricestr = lineParts[9].strip();
         if(pricestr.startsWith("\"") || pricestr.endsWith("\"")) pricestr = pricestr.replace("\"", "");
 
